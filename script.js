@@ -89,6 +89,9 @@ class Terminal {
   }
 
   finishBoot() {
+    // Clear boot messages
+    this.output.innerHTML = '';
+
     // Show welcome message and initialize normal terminal
     this.showWelcome();
 
@@ -141,7 +144,7 @@ class Terminal {
       this.historyIndex = this.history.length;
     }
 
-    this.appendOutput(`<span class="success">marius@aasarod:${this.currentDir}$ </span>${command}`);
+    this.appendOutput(`<span class="success">${this.getCurrentPrompt()}</span>${command}`);
 
     if (command) {
       const [cmd, ...args] = command.split(' ');
@@ -216,6 +219,19 @@ class Terminal {
     }, 0);
   }
 
+  getCurrentPrompt() {
+    const user = this.godModeActive ? 'root' : 'marius';
+    const host = this.godModeActive ? 'aasarod.no' : 'aasarod';
+    return `${user}@${host}:${this.currentDir}$ `;
+  }
+
+  updatePrompt() {
+    const promptElement = document.querySelector('.prompt');
+    if (promptElement) {
+      promptElement.textContent = this.getCurrentPrompt();
+    }
+  }
+
   updateCursor() {
     const promptElement = document.querySelector('.prompt');
     if (!promptElement) return;
@@ -264,7 +280,8 @@ Type <span class="success">'help'</span> to see available commands.`;
   }
 
   showHelp() {
-    let help = `Available Commands:
+    let help = `
+<span class="highlight">Available Commands:</span>
 
 about      - Learn more about me
 contact    - Get my contact information
@@ -273,11 +290,11 @@ work       - View my work experience
 cv/resume  - View my work experience
 neofetch   - Display system information
 
-Entertainment:
+<span class="highlight">Entertainment:</span>
 
 snake      - Play Snake game
 
-System Commands:
+<span class="highlight">System Commands:</span>
 
 ls         - List directory contents
 cat [file] - Display file contents
@@ -311,8 +328,7 @@ whoami     - Enhanced user info`;
   }
 
   showAbout() {
-    const about = `About
-
+    const about = `
 Hello! My name is Marius Høgli Aasarød, and I am passionate about fly fishing, cooking, programming, data visualization, design, art, and strategy. I love exploring new ways to combine these interests in my work and hobbies.
 
 If you'd like to get in touch, feel free to reach out via email or connect with me on GitHub.
@@ -331,15 +347,14 @@ If you'd like to get in touch, feel free to reach out via email or connect with 
   }
 
   showSkills() {
-    const skills = `Technical Skills
-
-Programming languages:
+    const skills = `
+<span class="highlight">Programming languages:</span>
 Python, Go, SQL, HTML/CSS/JS
 
-Tools and platforms:
+<span class="highlight">Tools and platforms:</span>
 Tableau, Power BI, Azure, Azure Functions, Google Analytics, Pandas, Polars
 
-Skills:
+<span class="highlight">Skills:</span>
 Data Analysis, Visualization & Interpretation
 Data Storage, Manipulation, Transformation & Management
 Agile Development Methodologies
@@ -348,18 +363,17 @@ Collaborative Leadership`;
   }
 
   showWork() {
-    const work = `Work Experience
-
-<span class="highlight">Senior Consultant at Crayon Consulting AS</span>
+    const work = `
+<span class="highlight">Senior Consultant at Crayon Consulting AS - 2023-present</span>
 Transforming data into actionable insights.
 
-<span class="highlight">Business Analyst at Folkeinvest AS</span>
+<span class="highlight">Business Analyst at Folkeinvest AS - 2021-2023</span>
 Tackled the intricate world of analytics and Python-based microservice development for streamlining workflows through automation.
 
-<span class="highlight">Senior Associate at KPMG AS</span>
+<span class="highlight">Senior Associate at KPMG AS - 2020-2021</span>
 Developed customizable dashboards, robust reporting systems, and defined design principles to optimize usability and enhance overall business effectiveness.
 
-<span class="highlight">Consultant at Rav Norge AS</span>
+<span class="highlight">Consultant at Rav Norge AS - 2018-2020</span>
 Designed dashboards, reporting solutions and established design guidelines focusing on UX/service design for better user experiences and holistic business management.`;
     this.appendOutput(work);
   }
@@ -574,10 +588,11 @@ Designed dashboards, reporting solutions and established design guidelines focus
 
   godMode() {
     this.appendOutput('<span class="warning">🔓 GOD MODE ACTIVATED</span>');
-    this.appendOutput('<span class="highlight">root@aasarod:~# Access Granted</span>');
+    this.appendOutput('<span class="highlight">root@aasarod.no:~# Access Granted</span>');
     this.appendOutput('<span class="success">All systems unlocked. You now have admin privileges!</span>');
     this.appendOutput('');
     this.godModeActive = true;
+    this.updatePrompt();
 
     // Add god mode commands
     this.commands.hack = this.hackSequence.bind(this);
