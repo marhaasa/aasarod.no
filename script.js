@@ -48,7 +48,55 @@ class Terminal {
   }
 
   init() {
+    this.startBootSequence();
+  }
+
+  startBootSequence() {
+    // Hide terminal interface during boot
+    const inputLine = document.querySelector('.input-line');
+    inputLine.style.display = 'none';
+    
+    const bootMessages = [
+      { text: 'AASAROD Terminal OS v2.1.0 - Starting boot sequence...', delay: 500 },
+      { text: 'Initializing hardware components...', delay: 800 },
+      { text: 'Loading kernel modules...', delay: 600 },
+      { text: 'Mounting filesystems...', delay: 700 },
+      { text: 'Starting network services...', delay: 650 },
+      { text: 'Loading user profile: marius@aasarod', delay: 900 },
+      { text: 'Initializing terminal environment...', delay: 700 },
+      { text: 'Checking portfolio data integrity...', delay: 800 },
+      { text: 'All systems operational. Boot complete.', delay: 1000 },
+      { text: '', delay: 300 }
+    ];
+
+    let messageIndex = 0;
+    const displayMessage = () => {
+      if (messageIndex < bootMessages.length) {
+        const message = bootMessages[messageIndex];
+        if (message.text) {
+          this.appendOutput(`<span class="success">[OK]</span> <span class="muted">${message.text}</span>`);
+        } else {
+          this.appendOutput('');
+        }
+        messageIndex++;
+        setTimeout(displayMessage, message.delay);
+      } else {
+        this.finishBoot();
+      }
+    };
+
+    displayMessage();
+  }
+
+  finishBoot() {
+    // Show welcome message and initialize normal terminal
     this.showWelcome();
+    
+    // Show terminal interface
+    const inputLine = document.querySelector('.input-line');
+    inputLine.style.display = 'flex';
+    
+    // Initialize input handlers
     this.input.addEventListener('keydown', this.handleKeydown.bind(this));
     this.input.addEventListener('input', this.updateCursor.bind(this));
 
