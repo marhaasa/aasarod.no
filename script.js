@@ -26,6 +26,7 @@ class Terminal {
     this.konamiCode = [];
     this.konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
     this.godModeActive = false;
+    this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
     this.commands = {
       help: this.showHelp.bind(this),
@@ -48,7 +49,36 @@ class Terminal {
   }
 
   init() {
+    // Check if mobile and show simple version
+    if (this.isMobile) {
+      this.showMobileVersion();
+      return;
+    }
     this.startBootSequence();
+  }
+
+  showMobileVersion() {
+    // Hide terminal interface completely
+    const inputLine = document.querySelector('.input-line');
+    inputLine.style.display = 'none';
+
+    const mobileContent = `<span class="warning">mobile device detected</span>
+
+this portfolio is optimized for non-mobile devices
+
+<span class="highlight">GitHub:</span> <a href="https://github.com/marhaasa" target="_blank">github.com/marhaasa</a>
+<span class="highlight">Email:</span>  <a href="mailto:marius@aasarod.no">marius@aasarod.no</a>
+ 
+
+<span class="info">for full experience visit from desktop:</span>
+• interactive terminal commands
+• boot sequence animation  
+• snake game
+• matrix effects
+• konami code secrets
+`;
+
+    this.appendOutput(mobileContent);
   }
 
   startBootSequence() {
