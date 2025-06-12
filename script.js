@@ -55,7 +55,7 @@ class Terminal {
     // Hide terminal interface during boot
     const inputLine = document.querySelector('.input-line');
     inputLine.style.display = 'none';
-    
+
     const bootMessages = [
       { text: 'AASAROD Terminal OS v2.1.0 - Starting boot sequence...', delay: 500 },
       { text: 'Initializing hardware components...', delay: 800 },
@@ -91,11 +91,11 @@ class Terminal {
   finishBoot() {
     // Show welcome message and initialize normal terminal
     this.showWelcome();
-    
+
     // Show terminal interface
     const inputLine = document.querySelector('.input-line');
     inputLine.style.display = 'flex';
-    
+
     // Initialize input handlers
     this.input.addEventListener('keydown', this.handleKeydown.bind(this));
     this.input.addEventListener('input', this.updateCursor.bind(this));
@@ -406,7 +406,7 @@ Designed dashboards, reporting solutions and established design guidelines focus
   neofetch() {
     const neofetch = `                    -\`               <span class="highlight">marius@aasarod.no</span>
                    .o+\`              -----------------
-                  \`ooo/              <span class="info">OS:</span> Portfolio macOS
+                  \`ooo/              <span class="info">OS:</span> AASAROD Terminal OS v2.1.0
                  \`+oooo:             <span class="info">Host:</span> Web Terminal
                 \`+oooooo:            <span class="info">Kernel:</span> JavaScript Engine
                 -+oooooo+:           <span class="info">Uptime:</span> Since page load
