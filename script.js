@@ -6,6 +6,9 @@ class Terminal {
     this.history = [];
     this.historyIndex = -1;
     this.currentDir = '~';
+    this.konamiCode = [];
+    this.konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+    this.godModeActive = false;
 
     this.commands = {
       help: this.showHelp.bind(this),
@@ -47,6 +50,11 @@ class Terminal {
   }
 
   handleKeydown(event) {
+    // Check for Konami code - if activated, stop processing this key
+    if (this.checkKonamiCode(event)) {
+      return;
+    }
+
     if (event.key === 'Enter') {
       this.processCommand();
     } else if (event.key === 'ArrowUp') {
@@ -198,7 +206,7 @@ Type <span class="success">'help'</span> to see available commands.`;
   }
 
   showHelp() {
-    const help = `Available Commands:
+    let help = `Available Commands:
 
 about      - Learn more about me
 contact    - Get my contact information
@@ -207,15 +215,36 @@ work       - View my work experience
 cv/resume  - View my work experience
 neofetch   - Display system information
 
+Entertainment:
+
+snake      - Play Snake game
+
 System Commands:
 
 ls         - List directory contents
 cat [file] - Display file contents
 date       - Show current date and time
 echo [text]- Display text
-snake      - Play Snake game
 clear      - Clear the terminal
 help       - Show this help message`;
+
+    if (this.godModeActive) {
+      help += `
+
+<span class="warning">🔓 GOD MODE COMMANDS:</span>
+
+hack       - Simulate hacking sequence
+sudo [cmd] - Run commands with fake admin rights
+reboot     - Restart the terminal (with style)
+uptime     - Show system uptime
+ps         - Show running processes
+kill [pid] - Kill a process (fake)
+whoami     - Enhanced user info`;
+    }
+
+    help += `
+
+<span class="muted">💡 Tip: Try the Konami code (↑↑↓↓←→←→BA) for secret commands!</span>`;
     this.appendOutput(help);
   }
 
@@ -373,6 +402,275 @@ Designed dashboards, reporting solutions and established design guidelines focus
       this.input.focus();
     });
     game.start();
+  }
+
+  checkKonamiCode(event) {
+    this.konamiCode.push(event.code);
+
+    // Keep only the last 10 keys
+    if (this.konamiCode.length > 10) {
+      this.konamiCode.shift();
+    }
+
+    // Check if the sequence matches
+    if (this.konamiCode.length === 10 &&
+      this.konamiCode.every((key, index) => key === this.konamiSequence[index])) {
+      event.preventDefault(); // Prevent the final "A" from being typed
+      this.activateKonamiMode();
+      this.konamiCode = []; // Reset
+      return true; // Indicate Konami code was activated
+    }
+    return false;
+  }
+
+  activateKonamiMode() {
+    // Clear the input prompt
+    this.input.value = '';
+    this.updateCursor();
+
+    this.appendOutput('');
+    this.appendOutput('<span class="success">🎉 KONAMI CODE ACTIVATED! 🎉</span>');
+    this.appendOutput('<span class="highlight">You have unlocked secret developer mode!</span>');
+    this.appendOutput('');
+    this.appendOutput('<span class="info">Secret commands unlocked:</span>');
+    this.appendOutput('<span class="muted">• matrix - Enter the Matrix</span>');
+    this.appendOutput('<span class="muted">• god - Admin privileges activated</span>');
+    this.appendOutput('<span class="muted">• secret - Hidden portfolio content</span>');
+    this.appendOutput('');
+
+    // Add secret commands
+    this.commands.matrix = this.startMatrix.bind(this);
+    this.commands.god = this.godMode.bind(this);
+    this.commands.secret = this.showSecret.bind(this);
+  }
+
+  startMatrix() {
+    this.appendOutput('Entering the Matrix...');
+
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: black;
+      z-index: 1000;
+      overflow: hidden;
+      font-family: monospace;
+    `;
+
+    document.body.appendChild(overlay);
+
+    // Matrix rain effect
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789アカサタナハマヤラワガザダバパイキシチニヒミリギジヂビピウクスツヌフムユルグズブプエケセテネヘメレゲゼデベペオコソトノホモヨロゴゾドボポヲン';
+    const matrix = [];
+    const columns = Math.floor(window.innerWidth / 15);
+
+    for (let i = 0; i < columns; i++) {
+      matrix[i] = 0;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.position = 'absolute';
+    overlay.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#0F0';
+    ctx.font = '15px monospace';
+
+    let matrixInterval = setInterval(() => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0F0';
+
+      for (let i = 0; i < matrix.length; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(char, i * 15, matrix[i] * 15);
+
+        if (matrix[i] * 15 > canvas.height && Math.random() > 0.975) {
+          matrix[i] = 0;
+        }
+        matrix[i]++;
+      }
+    }, 50);
+
+    // Exit on any key press or click
+    const exitMatrix = (event) => {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      clearInterval(matrixInterval);
+      document.body.removeChild(overlay);
+      document.removeEventListener('keydown', exitMatrix, true);
+      this.input.focus();
+    };
+
+    // Use capture phase to get the event before the terminal handler
+    document.addEventListener('keydown', exitMatrix, true);
+    overlay.addEventListener('click', exitMatrix);
+  }
+
+  godMode() {
+    this.appendOutput('<span class="warning">🔓 GOD MODE ACTIVATED</span>');
+    this.appendOutput('<span class="highlight">root@aasarod:~# Access Granted</span>');
+    this.appendOutput('<span class="success">All systems unlocked. You now have admin privileges!</span>');
+    this.appendOutput('');
+    this.godModeActive = true;
+
+    // Add god mode commands
+    this.commands.hack = this.hackSequence.bind(this);
+    this.commands.sudo = this.sudoCommand.bind(this);
+    this.commands.reboot = this.rebootSystem.bind(this);
+    this.commands.uptime = this.showUptime.bind(this);
+    this.commands.ps = this.showProcesses.bind(this);
+    this.commands.kill = this.killProcess.bind(this);
+    this.commands.whoami = this.enhancedWhoami.bind(this);
+
+    this.appendOutput('<span class="info">New commands available! Type "help" to see them.</span>');
+  }
+
+  showSecret() {
+    this.appendOutput('<span class="info">🕵️ Secret Portfolio Content 🕵️</span>');
+    this.appendOutput('');
+    this.appendOutput('<span class="highlight">Hidden Skills:</span>');
+    this.appendOutput('<span class="success">• Coffee Consumption: Expert Level ☕</span>');
+    this.appendOutput('<span class="success">• Debugging at 3 AM: Professional</span>');
+    this.appendOutput('<span class="success">• Stack Overflow Navigation: Master</span>');
+    this.appendOutput('<span class="success">• Rubber Duck Debugging: Advanced</span>');
+    this.appendOutput('<span class="success">• Googling Error Messages: Ninja Level</span>');
+    this.appendOutput('');
+    this.appendOutput('<span class="highlight">Secret Projects:</span>');
+    this.appendOutput('<span class="aqua">• This Terminal Portfolio (you\'re using it!)</span>');
+    this.appendOutput('<span class="aqua">• Konami Code Implementation (you found it!)</span>');
+    this.appendOutput('<span class="aqua">• Secret Matrix Rain Effect</span>');
+    this.appendOutput('<span class="aqua">• Fake God Mode System</span>');
+    this.appendOutput('');
+    this.appendOutput('<span class="highlight">Fun Facts:</span>');
+    this.appendOutput('<span class="purple">• This terminal has exactly ' + Object.keys(this.commands).length + ' commands</span>');
+    this.appendOutput('<span class="purple">• You\'ve typed ' + this.history.length + ' commands so far</span>');
+    this.appendOutput('<span class="purple">• The snake game gets progressively faster</span>');
+    this.appendOutput('<span class="purple">• There\'s ASCII art hidden in the code</span>');
+    this.appendOutput('');
+    this.appendOutput('<span class="muted">Thanks for exploring! 🎮 Keep being curious!</span>');
+  }
+
+  hackSequence() {
+    this.appendOutput('<span class="warning">🔴 INITIATING HACK SEQUENCE...</span>');
+    this.appendOutput('');
+
+    const steps = [
+      'Scanning network topology...',
+      'Bypassing firewall protocols...',
+      'Injecting SQL queries...',
+      'Decrypting password hashes...',
+      'Accessing mainframe database...',
+      'Downloading classified files...',
+      'Covering digital footprints...',
+      'HACK COMPLETE ✓'
+    ];
+
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < steps.length - 1) {
+        this.appendOutput(`<span class="muted">[${i + 1}/7] ${steps[i]}</span>`);
+      } else {
+        this.appendOutput(`<span class="success">${steps[i]}</span>`);
+        this.appendOutput('<span class="highlight">Just kidding! This is completely fake 😄</span>');
+        clearInterval(interval);
+      }
+      i++;
+    }, 800);
+  }
+
+  sudoCommand(args) {
+    if (!args.length) {
+      this.appendOutput('<span class="error">sudo: usage: sudo [command]</span>');
+      return;
+    }
+
+    const command = args.join(' ');
+    this.appendOutput(`<span class="warning">[sudo] password for marius:</span> <span class="muted">**********</span>`);
+    this.appendOutput(`<span class="success">✓ Executing with admin privileges: ${command}</span>`);
+    this.appendOutput('<span class="highlight">Admin command executed successfully!</span>');
+    this.appendOutput('<span class="muted">(Actually just pretending - no real sudo here!)</span>');
+  }
+
+  rebootSystem() {
+    this.appendOutput('<span class="warning">🔄 SYSTEM REBOOT INITIATED</span>');
+    this.appendOutput('<span class="muted">Stopping services...</span>');
+    this.appendOutput('<span class="muted">Unmounting filesystems...</span>');
+    this.appendOutput('<span class="muted">Shutting down...</span>');
+
+    setTimeout(() => {
+      this.clear();
+      this.appendOutput('<span class="success">🖥️  SYSTEM RESTART COMPLETE</span>');
+      this.appendOutput('<span class="highlight">Welcome back to AASAROD Terminal OS</span>');
+      this.appendOutput('');
+      this.showWelcome();
+    }, 2000);
+  }
+
+  showUptime() {
+    const now = new Date();
+    const startTime = new Date(now.getTime() - Math.random() * 86400000); // Random uptime up to 1 day
+    const uptime = Math.floor((now - startTime) / 1000);
+    const hours = Math.floor(uptime / 3600);
+    const minutes = Math.floor((uptime % 3600) / 60);
+
+    this.appendOutput(`<span class="highlight">System uptime:</span> ${hours}h ${minutes}m`);
+    this.appendOutput(`<span class="info">Load average:</span> 0.${Math.floor(Math.random() * 99)}, 0.${Math.floor(Math.random() * 99)}, 0.${Math.floor(Math.random() * 99)}`);
+    this.appendOutput(`<span class="success">Users logged in:</span> 1 (you!)`);
+  }
+
+  showProcesses() {
+    this.appendOutput('<span class="highlight">PID  COMMAND           CPU   MEM</span>');
+    this.appendOutput('<span class="muted">───  ───────────────   ───   ───</span>');
+
+    const processes = [
+      { pid: 1, name: 'portfolio-kernel', cpu: '2.1%', mem: '15MB' },
+      { pid: 42, name: 'terminal-emulator', cpu: '0.8%', mem: '8MB' },
+      { pid: 101, name: 'snake-game-engine', cpu: '0.0%', mem: '2MB' },
+      { pid: 256, name: 'matrix-renderer', cpu: '0.0%', mem: '1MB' },
+      { pid: 512, name: 'konami-detector', cpu: '0.1%', mem: '0.5MB' },
+      { pid: 1337, name: 'hacker-simulator', cpu: '99.9%', mem: '1337MB' }
+    ];
+
+    processes.forEach(proc => {
+      this.appendOutput(`<span class="aqua">${proc.pid.toString().padEnd(4)}</span> <span class="success">${proc.name.padEnd(17)}</span> <span class="warning">${proc.cpu.padEnd(5)}</span> <span class="purple">${proc.mem}</span>`);
+    });
+  }
+
+  killProcess(args) {
+    if (!args.length) {
+      this.appendOutput('<span class="error">kill: usage: kill [pid]</span>');
+      return;
+    }
+
+    const pid = args[0];
+    if (pid === '1337') {
+      this.appendOutput('<span class="error">kill: cannot kill process 1337: Operation not permitted</span>');
+      this.appendOutput('<span class="muted">Nice try! That process is protected 😉</span>');
+    } else {
+      this.appendOutput(`<span class="success">Process ${pid} terminated successfully</span>`);
+      this.appendOutput('<span class="muted">(Fake process killed - no actual processes harmed!)</span>');
+    }
+  }
+
+  enhancedWhoami() {
+    this.appendOutput('<span class="highlight">Enhanced User Information:</span>');
+    this.appendOutput('');
+    this.appendOutput('<span class="success">Username:</span> marhaasa');
+    this.appendOutput('<span class="success">Real Name:</span> Marius Høgli Aasarød');
+    this.appendOutput('<span class="success">Role:</span> Data Wizard & Terminal Enthusiast');
+    this.appendOutput('<span class="success">Access Level:</span> 🔓 GOD MODE ACTIVATED');
+    this.appendOutput('<span class="success">Terminal Skills:</span> Expert');
+    this.appendOutput('<span class="success">Konami Code Status:</span> ✓ Discovered');
+    this.appendOutput('<span class="success">Secret Commands:</span> Unlocked');
+    this.appendOutput('<span class="success">Coffee Level:</span> ☕☕☕ (High)');
   }
 }
 
