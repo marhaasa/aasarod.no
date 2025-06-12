@@ -1,3 +1,20 @@
+/*
+    ╔══════════════════════════════════════╗
+    ║                                      ║
+    ║         🕵️ HIDDEN ASCII ART 🕵️        ║
+    ║                                      ║
+    ║     ██╗  ██╗██╗██████╗ ██████╗ ███████╗███╗   ██╗     ║
+    ║     ██║  ██║██║██╔══██╗██╔══██╗██╔════╝████╗  ██║     ║
+    ║     ███████║██║██║  ██║██║  ██║█████╗  ██╔██╗ ██║     ║
+    ║     ██╔══██║██║██║  ██║██║  ██║██╔══╝  ██║╚██╗██║     ║
+    ║     ██║  ██║██║██████╔╝██████╔╝███████╗██║ ╚████║     ║
+    ║     ╚═╝  ╚═╝╚═╝╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝     ║
+    ║                                      ║
+    ║  "You found the secret ASCII art!"   ║
+    ║                                      ║
+    ╚══════════════════════════════════════╝
+*/
+
 class Terminal {
   constructor() {
     this.input = document.getElementById('input');
@@ -181,15 +198,8 @@ class Terminal {
   }
 
   scrollToBottom() {
-    // Only scroll if needed, don't force to bottom
-    const output = this.output;
-    const terminal = output.parentElement;
-    const outputRect = output.getBoundingClientRect();
-    const terminalRect = terminal.getBoundingClientRect();
-
-    if (outputRect.bottom > terminalRect.bottom) {
-      output.scrollTop = output.scrollHeight - output.clientHeight;
-    }
+    // Always scroll to bottom to show latest output like a real terminal
+    window.scrollTo(0, document.body.scrollHeight);
   }
 
   showWelcome() {
