@@ -1,18 +1,18 @@
 /*
-    ╔══════════════════════════════════════╗
-    ║                                      ║
-    ║         🕵️ HIDDEN ASCII ART 🕵️        ║
-    ║                                      ║
+    ╔═══════════════════════════════════════════════════════╗
+    ║                                                       ║
+    ║                 🕵️ HIDDEN ASCII ART 🕵️                ║
+    ║                                                       ║
     ║     ██╗  ██╗██╗██████╗ ██████╗ ███████╗███╗   ██╗     ║
     ║     ██║  ██║██║██╔══██╗██╔══██╗██╔════╝████╗  ██║     ║
     ║     ███████║██║██║  ██║██║  ██║█████╗  ██╔██╗ ██║     ║
     ║     ██╔══██║██║██║  ██║██║  ██║██╔══╝  ██║╚██╗██║     ║
     ║     ██║  ██║██║██████╔╝██████╔╝███████╗██║ ╚████║     ║
     ║     ╚═╝  ╚═╝╚═╝╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝     ║
-    ║                                      ║
-    ║  "You found the secret ASCII art!"   ║
-    ║                                      ║
-    ╚══════════════════════════════════════╝
+    ║                                                       ║
+    ║             "You found the secret ASCII art!"         ║
+    ║                                                       ║
+    ╚═══════════════════════════════════════════════════════╝
 */
 
 class Terminal {
@@ -64,18 +64,13 @@ class Terminal {
 
     const mobileContent = `<span class="warning">mobile device detected</span>
 
-this portfolio is optimized for non-mobile devices
+this website is optimized for non-mobile devices
 
 <span class="highlight">GitHub:</span> <a href="https://github.com/marhaasa" target="_blank">github.com/marhaasa</a>
 <span class="highlight">Email:</span>  <a href="mailto:marius@aasarod.no">marius@aasarod.no</a>
  
 
-<span class="info">for full experience visit from desktop:</span>
-• interactive terminal commands
-• boot sequence animation  
-• snake game
-• matrix effects
-• konami code secrets
+<span class="info">for the full experience please visit from desktop</span>
 `;
 
     this.appendOutput(mobileContent);
@@ -92,7 +87,7 @@ this portfolio is optimized for non-mobile devices
       { text: 'Loading kernel modules...', delay: 600 },
       { text: 'Mounting filesystems...', delay: 700 },
       { text: 'Starting network services...', delay: 650 },
-      { text: 'Loading user profile: marius@aasarod', delay: 900 },
+      { text: 'Loading user profile: visitor@aasarod', delay: 900 },
       { text: 'Initializing terminal environment...', delay: 700 },
       { text: 'Checking portfolio data integrity...', delay: 800 },
       { text: 'All systems operational. Boot complete.', delay: 1000 },
@@ -250,8 +245,8 @@ this portfolio is optimized for non-mobile devices
   }
 
   getCurrentPrompt() {
-    const user = this.godModeActive ? 'root' : 'marius';
-    const host = this.godModeActive ? 'aasarod.no' : 'aasarod';
+    const user = this.godModeActive ? 'marius' : 'visitor';
+    const host = this.godModeActive ? 'aasarod' : 'aasarod';
     return `${user}@${host}:${this.currentDir}$ `;
   }
 
