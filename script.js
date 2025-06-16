@@ -98,19 +98,19 @@ this website is optimized for non-mobile devices
     const displayMessage = () => {
       if (messageIndex < bootMessages.length) {
         const message = bootMessages[messageIndex];
-        
+
         // Random delay between 100ms and 1000ms for each step
         const randomDelay = Math.floor(Math.random() * 900) + 100;
-        
+
         if (message.text) {
           // Check for random boot failure (5% chance for steps that can fail)
           const shouldFail = message.canFail && Math.random() < 0.05;
-          
+
           if (shouldFail) {
             this.appendOutput(`<span class="error">[FAIL]</span> <span class="muted">${message.text}</span>`);
             this.appendOutput('<span class="warning">Boot failure detected. Restarting boot sequence...</span>');
             this.appendOutput('');
-            
+
             // Wait 2 seconds, then restart boot sequence
             setTimeout(() => {
               this.output.innerHTML = '';
@@ -123,7 +123,7 @@ this website is optimized for non-mobile devices
         } else {
           this.appendOutput('');
         }
-        
+
         messageIndex++;
         setTimeout(displayMessage, randomDelay);
       } else {
@@ -464,25 +464,25 @@ Designed dashboards, reporting solutions and established design guidelines focus
   }
 
   neofetch() {
-    const neofetch = `                    -\`               <span class="highlight">marius@aasarod.no</span>
-                   .o+\`              -----------------
-                  \`ooo/              <span class="info">OS:</span> AASAROD Terminal OS v2.1.0
-                 \`+oooo:             <span class="info">Host:</span> Web Terminal
-                \`+oooooo:            <span class="info">Kernel:</span> JavaScript Engine
-                -+oooooo+:           <span class="info">Uptime:</span> Since page load
-              \`/:-:++oooo+:          <span class="info">Shell:</span> zsh 5.8.1
-             \`/++++/+++++++:         <span class="info">Resolution:</span> ${window.innerWidth}x${window.innerHeight}
-            \`/++++++++++++++:        <span class="info">Terminal:</span> Web Browser
-           \`/+++ooooooooooooo/\`      <span class="info">CPU:</span> JavaScript V8
-          ./ooosssso++osssssso+\`     <span class="info">Memory:</span> Optimized
-         .oossssso-\`\`\`\`/ossssss+\`    
-        -osssssso.      :ssssssso.   
-       :osssssss/        osssso+++.  
-      /ossssssss/        +ssssooo/-  <span class="error">●</span><span class="warning">●</span><span class="success">●</span><span class="info">●</span><span class="secondary">●</span><span class="highlight">●</span>
-    \`/ossssso+/:-        -:/+osssso+- 
-   \`+sso+:-\`                 \`.-/+oso:
-  \`++:.                           \`-/+/
-  .\`                                 \`/`;
+    const neofetch = `                    <span class="warning">-\`</span>               <span class="highlight">visitor@aasarod.no</span>
+                   <span class="success">.o+\`</span>              -----------------
+                  <span class="info">\`ooo/</span>              <span class="info">OS:</span> AASAROD Terminal OS v2.1.0
+                 <span class="secondary">\`+oooo:</span>             <span class="info">Host:</span> Web Terminal
+                <span class="highlight">\`+oooooo:</span>            <span class="info">Kernel:</span> JavaScript Engine
+                <span class="error">-+oooooo+:</span>           <span class="info">Uptime:</span> Since page load
+              <span class="warning">\`/:-:++oooo+:</span>          <span class="info">Shell:</span> zsh 5.8.1
+             <span class="success">\`/++++/+++++++:</span>         <span class="info">Resolution:</span> ${window.innerWidth}x${window.innerHeight}
+            <span class="info">\`/++++++++++++++:</span>        <span class="info">Terminal:</span> Web Browser
+           <span class="secondary">\`/+++ooooooooooooo/\`</span>      <span class="info">CPU:</span> JavaScript V8
+          <span class="highlight">./ooosssso++osssssso+\`</span>     <span class="info">Memory:</span> Optimized
+         <span class="error">.oossssso-\`\`\`\`/ossssss+\`</span>    
+        <span class="warning">-osssssso.</span>      <span class="success">:ssssssso.</span>   <span style="background: #fb4934; color: #fb4934;">███</span><span style="background: #b8bb26; color: #b8bb26;">███</span><span style="background: #fabd2f; color: #fabd2f;">███</span><span style="background: #83a598; color: #83a598;">███</span><span style="background: #d3869b; color: #d3869b;">███</span><span style="background: #8ec07c; color: #8ec07c;">███</span><span style="background: #fe8019; color: #fe8019;">███</span><span style="background: #928374; color: #928374;">███</span>
+       <span class="info">:osssssss/</span>        <span class="secondary">osssso+++.</span>  <span style="background: #cc241d; color: #cc241d;">███</span><span style="background: #98971a; color: #98971a;">███</span><span style="background: #d79921; color: #d79921;">███</span><span style="background: #458588; color: #458588;">███</span><span style="background: #b16286; color: #b16286;">███</span><span style="background: #689d6a; color: #689d6a;">███</span><span style="background: #d65d0e; color: #d65d0e;">███</span><span style="background: #a89984; color: #a89984;">███</span>
+      <span class="highlight">/ossssssss/</span>        <span class="error">+ssssooo/-</span>  
+    <span class="secondary">\`/ossssso+/:-</span>        <span class="warning">-:/+osssso+-</span> 
+   <span class="info">\`+sso+:-\`</span>                 <span class="highlight">\`.-/+oso:</span>
+  <span class="success">\`++:.</span>                           <span class="error">\`-/+/</span>
+  <span class="muted">.\`</span>                                 <span class="warning">\`/</span>`;
     this.appendOutput(neofetch);
   }
 
