@@ -82,29 +82,50 @@ this website is optimized for non-mobile devices
     inputLine.style.display = 'none';
 
     const bootMessages = [
-      { text: 'AASAROD Terminal OS v2.1.0 - Starting boot sequence...', delay: 500 },
-      { text: 'Initializing hardware components...', delay: 800 },
-      { text: 'Loading kernel modules...', delay: 600 },
-      { text: 'Mounting filesystems...', delay: 700 },
-      { text: 'Starting network services...', delay: 650 },
-      { text: 'Loading user profile: visitor@aasarod', delay: 900 },
-      { text: 'Initializing terminal environment...', delay: 700 },
-      { text: 'Checking portfolio data integrity...', delay: 800 },
-      { text: 'All systems operational. Boot complete.', delay: 1000 },
-      { text: '', delay: 300 }
+      { text: 'AASAROD Terminal OS v2.1.0 - Starting boot sequence...', canFail: false },
+      { text: 'Initializing hardware components...', canFail: true },
+      { text: 'Loading kernel modules...', canFail: true },
+      { text: 'Mounting filesystems...', canFail: true },
+      { text: 'Starting network services...', canFail: true },
+      { text: 'Loading user profile: visitor@aasarod', canFail: true },
+      { text: 'Initializing terminal environment...', canFail: true },
+      { text: 'Checking portfolio data integrity...', canFail: true },
+      { text: 'All systems operational. Boot complete.', canFail: false },
+      { text: '', canFail: false }
     ];
 
     let messageIndex = 0;
     const displayMessage = () => {
       if (messageIndex < bootMessages.length) {
         const message = bootMessages[messageIndex];
+        
+        // Random delay between 100ms and 1000ms for each step
+        const randomDelay = Math.floor(Math.random() * 900) + 100;
+        
         if (message.text) {
-          this.appendOutput(`<span class="success">[OK]</span> <span class="muted">${message.text}</span>`);
+          // Check for random boot failure (5% chance for steps that can fail)
+          const shouldFail = message.canFail && Math.random() < 0.05;
+          
+          if (shouldFail) {
+            this.appendOutput(`<span class="error">[FAIL]</span> <span class="muted">${message.text}</span>`);
+            this.appendOutput('<span class="warning">Boot failure detected. Restarting boot sequence...</span>');
+            this.appendOutput('');
+            
+            // Wait 2 seconds, then restart boot sequence
+            setTimeout(() => {
+              this.output.innerHTML = '';
+              this.startBootSequence();
+            }, 2000);
+            return;
+          } else {
+            this.appendOutput(`<span class="success">[OK]</span> <span class="muted">${message.text}</span>`);
+          }
         } else {
           this.appendOutput('');
         }
+        
         messageIndex++;
-        setTimeout(displayMessage, message.delay);
+        setTimeout(displayMessage, randomDelay);
       } else {
         this.finishBoot();
       }
