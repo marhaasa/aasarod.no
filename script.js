@@ -634,7 +634,7 @@ Designed dashboards, reporting solutions and established design guidelines focus
 
   godMode() {
     this.appendOutput('<span class="warning">🔓 GOD MODE ACTIVATED</span>');
-    this.appendOutput('<span class="highlight">root@aasarod.no:~# Access Granted</span>');
+    this.appendOutput('<span class="highlight">marius@aasarod.no:~# Root Access Granted</span>');
     this.appendOutput('<span class="success">All systems unlocked. You now have admin privileges!</span>');
     this.appendOutput('');
     this.godModeActive = true;
